@@ -26,15 +26,24 @@ console.log('Web Services Online in Port ' + port);
 
 //Inicio post
 var request = require('request');
-var tweetPOST = {"tweet": "Hola desde NodeJS!"};
+var datos = {
+    "saludo": "Hola desde NodeJS!",
+    "numeros": [5, 2, 7, 55, 9, 5, 22]
+    };
+//go, python, ruby
+servs = ["http://localhost:3000/datos", "http://localhost:8082/datos", "http://localhost:4567/datos"];
+//Inicio for
+for (var i=0; i<servs.length; i++){
+	request({
+	    url: servs[i],
+	    method: "POST",
+	    headers: {'Content-Type': 'application/json'},
+	    json: true,   // <--Very important!!!
+	    body: datos
+	}, function (error, response, body){
+	    console.log(body);
+	});
+}
 
-request({
-    url: "http://localhost:8082/datos",
-    method: "POST",
-    json: true,   // <--Very important!!!
-    body: tweetPOST
-}, function (error, response, body){
-    console.log(response);
-});
 //Fin post
 

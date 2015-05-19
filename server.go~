@@ -19,7 +19,6 @@ func main() {
   })
 
   m.Post("/datos", binding.Bind(Datos{}), func(dato Datos) string{
-    
     return fmt.Sprintf("Tweet desde GOlang: %s\n", dato.Saludo)
     
   })
