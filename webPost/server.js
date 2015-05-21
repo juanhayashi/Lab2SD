@@ -1,5 +1,14 @@
 ﻿var port = 8081;
 
+function split_n(a, n) {
+    var len = a.length,out = [], i = 0;
+    while (i < len) {
+        var size = Math.ceil((len - i) / n--);
+        out.push(a.slice(i, i += size));
+    }
+    return out;
+}
+
 var express = require('express')
   , app = module.exports = express()
   , cors = require('cors')
@@ -23,27 +32,56 @@ app.use(bodyParser.json());
 app.use(cors());
 
 console.log('Web Services Online in Port ' + port);
+var stdio = require('stdio');
+ 
+var options = stdio.getopt({
+	'archivo': {
+		key: 'a',
+		mandatory: true,
+		args: 1
+	},
+	'servidores': {
+		key: 'n',
+		args: 1
+	},
+	'metodo': {
+		key: 'm',
+		args: 1
+	}
+})
 
+console.log(options['archivo'])
+console.log(options['servidores'])
+console.log(options['metodo'])
 //Inicio post
 var request = require('request');
-var datos = {
-    'saludo': "Hola desde NodeJS!",
-    'numeros': [5, 2, 7, 55, 9, 5, 22]
-    };
-//go, python, ruby
-servs = ["http://localhost:3000/datos", "http://localhost:8082/datos", "http://localhost:4567/datos"];
-//Inicio for
-for (var i=0; i<servs.length; i++){
-	request({
-	    url: servs[i],
-	    method: "POST",
-	    headers: {'Content-Type': 'application/json'},
-	    json: true,   // <--Very important!!!
-	    body: datos
-	}, function (error, response, body){
-	    console.log(body);
-	});
-}
+var data;
+var arrayaux=[];
+var fs = require('fs');
+fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
+	//console.log(data);
+	var arrayaux = data.split("\n").map(function (val) { return +val; });
+	arrayaux.pop();
+	//console.log(array);
+	var array=split_n(arrayaux,options['servidores']);
+	console.log(array);
 
-//Fin post
+	servs = ["http://192.168.50.13:8088/datos", "http://192.168.50.13:4567/datos", "http://192.168.50.13:8082/datos"];
+	//Inicio for
+	for (var i=0; i<options['servidores']; i++){
+		var datos = {
+			"saludo": options['metodo'],
+			"numeros": array[i]
+		};
+		request({
+		url: servs[i],
+		method: "POST",
+		headers: {'Content-Type': 'application/json'},
+		json: true, // <--Very important!!!
+		body: datos
+		}, function (error, response, body){
+		console.log(body);
+		});
+	}
+});
 
