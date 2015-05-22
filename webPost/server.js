@@ -1,4 +1,4 @@
-﻿var port = 8081;
+var port = 8081;
 
 function split_n(a, n) {
     var len = a.length,out = [], i = 0;
@@ -15,7 +15,7 @@ var express = require('express')
   , http = require('http')
   , server = http.createServer(app)
   , bodyParser = require('body-parser');
-  //server.listen(port);
+  server.listen(port);
 
 var databaseUrl = "TSD"; //Name db MongoDB
 
@@ -49,7 +49,14 @@ var options = stdio.getopt({
 		args: 1
 	}
 })
-
+if(options['metodo']!="bubblesort"){
+	if(options['metodo']!="quicksort"){
+		if(options['metodo']!="mergesort"){
+			console.log("metodo no valido\n")
+			return 0
+		} 
+	} 
+} 
 console.log(options['archivo'])
 console.log(options['servidores'])
 console.log(options['metodo'])
@@ -58,19 +65,20 @@ var request = require('request');
 var data;
 var arrayaux=[];
 var fs = require('fs');
+
 fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
 	//console.log(data);
 	var arrayaux = data.split("\n").map(function (val) { return +val; });
 	arrayaux.pop();
 	//console.log(array);
 	var array=split_n(arrayaux,options['servidores']);
-	console.log(array);
+	//console.log(array);
 
-	servs = ["http://192.168.50.13:8088/datos", "http://192.168.50.13:4567/datos", "http://192.168.50.13:8082/datos"];
+	servs = ["http://192.168.50.11:8088/datos", "http://192.168.0.174:4567/datos", "http://192.168.50.11:8082/datos"];
 	//Inicio for
 	for (var i=0; i<options['servidores']; i++){
 		var datos = {
-			"saludo": options['metodo'],
+			"metodo": options['metodo'],
 			"numeros": array[i]
 		};
 		request({
@@ -83,5 +91,14 @@ fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
 		console.log(body);
 		});
 	}
+});
+
+arraytodos=[]
+
+app.post('/send', function(req, res){
+	arraytodos.push(req.body.numeros)
+	console.log(arraytodos)
+	res.send("holo");
+
 });
 

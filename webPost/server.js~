@@ -1,4 +1,13 @@
-﻿var port = 8081;
+var port = 8081;
+
+function split_n(a, n) {
+    var len = a.length,out = [], i = 0;
+    while (i < len) {
+        var size = Math.ceil((len - i) / n--);
+        out.push(a.slice(i, i += size));
+    }
+    return out;
+}
 
 var express = require('express')
   , app = module.exports = express()
@@ -6,7 +15,7 @@ var express = require('express')
   , http = require('http')
   , server = http.createServer(app)
   , bodyParser = require('body-parser');
-  //server.listen(port);
+  server.listen(port);
 
 var databaseUrl = "TSD"; //Name db MongoDB
 
@@ -40,28 +49,38 @@ var options = stdio.getopt({
 		args: 1
 	}
 })
-
+if(options['metodo']!="bubblesort"){
+	if(options['metodo']!="quicksort"){
+		if(options['metodo']!="mergesort"){
+			console.log("metodo no valido\n")
+			return 0
+		} 
+	} 
+} 
 console.log(options['archivo'])
 console.log(options['servidores'])
 console.log(options['metodo'])
 //Inicio post
 var request = require('request');
 var data;
-var array=[];
+var arrayaux=[];
 var fs = require('fs');
+
 fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
-	console.log(data);
-	var array = data.split("\n").map(function (val) { return +val; });
-	array.pop();
-	console.log(array);
-	var datos = {
-	"saludo": "Hola desde NodeJS!",
-	"numeros": array
-	};
-	servs = ["http://192.168.50.13:8088/datos", "http://192.168.50.13:4567/datos", "http://192.168.50.13:8082/datos"];
+	//console.log(data);
+	var arrayaux = data.split("\n").map(function (val) { return +val; });
+	arrayaux.pop();
+	//console.log(array);
+	var array=split_n(arrayaux,options['servidores']);
+	//console.log(array);
+
+	servs = ["http://192.168.50.11:8088/datos", "http://192.168.50.11:4567/datos", "http://192.168.50.11:8082/datos"];
 	//Inicio for
-	var j=0;
 	for (var i=0; i<options['servidores']; i++){
+		var datos = {
+			"metodo": options['metodo'],
+			"numeros": array[i]
+		};
 		request({
 		url: servs[i],
 		method: "POST",
@@ -73,5 +92,13 @@ fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
 		});
 	}
 });
-//Fin post
+
+arraytodos=[]
+
+app.post('/send', function(req, res){
+	arraytodos.push(req.body.numeros)
+	console.log(arraytodos)
+	res.send("holo");
+
+});
 
