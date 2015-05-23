@@ -2,8 +2,9 @@ require 'sinatra'
 require 'json'
 require 'net/http'
 require 'rest-client'
+require 'thin'
 
-set:bind, '192.168.0.174'
+set:bind, 'localhost'
 get '/' do
   "Hello World!"
 end
