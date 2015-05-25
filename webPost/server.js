@@ -73,7 +73,8 @@ fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
 	//console.log(array);
 	var array=split_n(arrayaux,options['servidores']);
 	//console.log(array);
-
+	
+	//Falta agregar la IP del servidor PHP!
 	servs = ["http://192.168.50.11:8088/datos", "http://192.168.0.174:4567/datos", "http://192.168.50.11:8082/datos"];
 	//Inicio for
 	for (var i=0; i<options['servidores']; i++){
