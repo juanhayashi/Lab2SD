@@ -88,7 +88,7 @@ fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
 		json: true, // <--Very important!!!
 		body: datos
 		}, function (error, response, body){
-		console.log(body);
+		console.log(response.body);
 		});
 	}
 });
