@@ -94,17 +94,19 @@ function merge(&$lF, &$rF)
 function httpPOST($datos)
 {
     //API Url
-    $url = 'http://localhost:8081';
-     
-    $ch = curl_init($url);
-
-    $jsonDatos = json_encode($datos);
-     
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDatos);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
-    $resultado = curl_exec($ch);
-    return $resultado;
+	$datos2 = array("numeros" => $datos);
+	$postdata = json_encode($datos2);
+	$url = "http://10.42.0.100:8081/send";
+	    $opts = array('http' =>
+		array(
+		    'method'  => 'POST',
+		    'header'  => 'Content-type: application/json',
+		    'content' => $postdata
+		)
+	    );
+	$context = stream_context_create($opts);
+	$result = file_get_contents($url, false, $context);
+	return $result;
 }
 //Fin Funciones
 
@@ -118,15 +120,13 @@ $app->get("/", function () {
 $app->post("/datos", function () use ($app) {
     $json = $app->request->getBody();
     $data = json_decode($json, true); // parse the JSON into an assoc. array
-    //var_dump($data);
     $metodo = $data['metodo'];
     $numeros = $data['numeros'];
-
     switch($metodo){
         case "bubblesort":
             $numeros = bubbleSort($numeros);
             //HTTP POST req
-            $resultado = httpPOST($numeros);
+	    $resultado = httpPOST($numeros);
             
             break;
         case"mergesort":

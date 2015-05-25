@@ -53,7 +53,7 @@ if(options['metodo']!="bubblesort"){
 	if(options['metodo']!="quicksort"){
 		if(options['metodo']!="mergesort"){
 			console.log("metodo no valido\n")
-			return 0
+			process.exit(0);
 		} 
 	} 
 } 
@@ -73,8 +73,9 @@ fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
 	//console.log(array);
 	var array=split_n(arrayaux,options['servidores']);
 	//console.log(array);
-
-	servs = ["http://192.168.50.11:8088/datos", "http://192.168.50.11:4567/datos", "http://192.168.50.11:8082/datos"];
+	
+	//Falta agregar la IP del servidor PHP!
+	servs = ["http://localhost:8080/server.php/datos","http://192.168.50.11:8088/datos", "http://192.168.0.174:4567/datos", "http://192.168.50.11:8082/datos"];
 	//Inicio for
 	for (var i=0; i<options['servidores']; i++){
 		var datos = {
@@ -88,7 +89,7 @@ fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
 		json: true, // <--Very important!!!
 		body: datos
 		}, function (error, response, body){
-		console.log(body);
+		console.log(response.body);
 		});
 	}
 });
@@ -97,7 +98,7 @@ arraytodos=[]
 
 app.post('/send', function(req, res){
 	arraytodos.push(req.body.numeros)
-	console.log(arraytodos)
+	console.log(req.body)
 	res.send("holo");
 
 });

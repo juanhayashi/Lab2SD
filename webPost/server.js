@@ -53,7 +53,7 @@ if(options['metodo']!="bubblesort"){
 	if(options['metodo']!="quicksort"){
 		if(options['metodo']!="mergesort"){
 			console.log("metodo no valido\n")
-			return 0
+			process.exit(0);
 		} 
 	} 
 } 
@@ -75,7 +75,7 @@ fs.readFile('./'+options['archivo'], 'utf8', function(err, data) {
 	//console.log(array);
 	
 	//Falta agregar la IP del servidor PHP!
-	servs = ["http://192.168.50.11:8088/datos", "http://192.168.0.174:4567/datos", "http://192.168.50.11:8082/datos"];
+	servs = ["http://localhost:8080/server.php/datos","http://192.168.50.11:8088/datos", "http://192.168.0.174:4567/datos", "http://192.168.50.11:8082/datos"];
 	//Inicio for
 	for (var i=0; i<options['servidores']; i++){
 		var datos = {

@@ -34,7 +34,7 @@ func main() {
     m := Datos{dato.Metodo, dato.Numeros}
 
     request := gorequest.New()
-    request.Post("http://localhost:8081/send").
+    request.Post("http://10.42.0.100:8081/send").
     Set("Notes","gorequst is coming!").
     Send(m).
     End() 
@@ -45,7 +45,7 @@ func main() {
     
   })
 
-  m.RunOnAddr("192.168.50.11:8088");
+  m.RunOnAddr("10.42.0.1:8088");
 }
 
 func bubblesort(a []float64) {
