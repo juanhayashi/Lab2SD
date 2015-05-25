@@ -98,7 +98,7 @@ arraytodos=[]
 
 app.post('/send', function(req, res){
 	arraytodos.push(req.body.numeros)
-	console.log(req.body)
+	console.log(arraytodos)
 	res.send("holo");
 
 });
