@@ -89,5 +89,6 @@ PHP post req	http://thisinterestsme.com/sending-json-via-post-php/
 
 http://stackoverflow.com/questions/5647461/how-do-i-send-a-post-request-with-php	
 
+Nodejs Escribir archivo http://stackoverflow.com/questions/17614123/node-js-how-to-write-an-array-to-file
 
 Link externo referencias: https://docs.google.com/spreadsheets/d/1UDsQnJyHmhQMVOOTG-s2dVWIXVHn8w2FdLePlTYmIpc/edit?usp=sharing
