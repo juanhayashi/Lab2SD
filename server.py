@@ -5,32 +5,36 @@ app = Flask(__name__)
 
 @app.route('/datos', methods=['POST'])
 def recibir_datos():
-	metodo=request.json['metodo']
-	numeros=request.json['numeros']
-	if metodo=="bubblesort":
-		bubbleSort(numeros)
-	if metodo=="quicksort":
-		quickSort(numeros)
-	if metodo=="mergesort":
-		mergeSort(numeros)
-	print numeros
-	url = 'http://localhost:8081/send'
-	postdata = {'numeros':numeros}
+  metodo=request.json['metodo']
+  numeros=request.json['numeros']
+  print "\nNumeros recibidos"
+  print numeros
+  if metodo=="bubblesort":
+    bubbleSort(numeros)
+  if metodo=="quicksort":
+    quickSort(numeros)
+  if metodo=="mergesort":
+    mergeSort(numeros)
+  print "Numeros ordenados con %s" %  metodo
+  print numeros
+  url = 'http://10.42.0.100:8081/send'
+  postdata = {'numeros':numeros}
 
-	req = urllib2.Request(url)
-	req.add_header('Content-Type','application/json')
-	data = json.dumps(postdata)
+  req = urllib2.Request(url)
+  req.add_header('Content-Type','application/json')
+  data = json.dumps(postdata)
 
-	response = urllib2.urlopen(req,data)
-	return "Hola desde Python!", 201
+  response = urllib2.urlopen(req,data)
+  print "Se enviaron numeros ordenados\n"
+  return "Hola desde Python!", 201
 
 def bubbleSort(alist):
-    for passnum in range(len(alist)-1,0,-1):
-        for i in range(passnum):
-            if alist[i]>alist[i+1]:
-                temp = alist[i]
-                alist[i] = alist[i+1]
-                alist[i+1] = temp
+  for passnum in range(len(alist)-1,0,-1):
+    for i in range(passnum):
+      if alist[i]>alist[i+1]:
+        temp = alist[i]
+        alist[i] = alist[i+1]
+        alist[i+1] = temp
 
 
 def quickSort(alist):
@@ -110,4 +114,4 @@ def mergeSort(alist):
     print("Merging ",alist)
 
 if __name__ == "__main__":
-	app.run(host="192.168.50.11",port=8082)
+	app.run(host="10.42.0.1",port=8082)

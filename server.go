@@ -20,6 +20,8 @@ func main() {
   })
 
   m.Post("/datos", binding.Bind(Datos{}), func(dato Datos) string{
+    fmt.Println("\nNumeros recibidos")
+    fmt.Println(dato.Numeros)
     if dato.Metodo=="bubblesort"{
       bubblesort(dato.Numeros)
     }
@@ -27,9 +29,9 @@ func main() {
       quickSort(dato.Numeros,0,len(dato.Numeros)-1)
     }
     if dato.Metodo=="mergesort"{
-      fmt.Println("aqui")
       dato.Numeros=mergeSort(dato.Numeros)
     }
+    fmt.Println("Numeros ordenados con",dato.Metodo)
     fmt.Println(dato.Numeros)
     m := Datos{dato.Metodo, dato.Numeros}
 
@@ -39,9 +41,10 @@ func main() {
     Send(m).
     End() 
 
+    fmt.Println("Se enviaron numeros ordenados\n")
 
 
-    return fmt.Sprintf("Tweet desde GOlang: %s\n", dato.Metodo)
+    return fmt.Sprintf("Hola desde GO")
     
   })
 

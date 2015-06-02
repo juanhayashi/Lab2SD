@@ -4,7 +4,7 @@ require 'net/http'
 require 'rest-client'
 require 'thin'
 
-set:bind, 'localhost'
+set:bind, '10.42.0.1'
 get '/' do
   "Hello World!"
 end
@@ -12,37 +12,33 @@ end
 post '/datos' do
   request.body.rewind  # in case someone already read it
   datos = JSON.parse request.body.read
-  puts "Hello #{datos['metodo']}!"
-  puts "#{datos['numeros']}"
+  puts "\nNumeros recibidos\n#{datos['numeros']}"
 	metodo=String.new(datos['metodo'])
-	puts metodo
 	numeros=Array.new
 	numeros= datos['numeros']
 	numOrdenados=Array.new
 	case metodo
 		when 'quicksort' then
-			puts "quicksort"
 			numOrdenados=quicksort(numeros,0,numeros.length-1)
 			numOrdenados=numeros
-			puts numOrdenados
+			puts "Numeros ordenados con #{metodo}\n#{numOrdenados}"
 		when 'bubblesort' then
-			puts "bubblesort"
 			numOrdenados=bubblesort(numeros)
-			puts numOrdenados
+			puts "Numeros ordenados con #{metodo}\n#{numOrdenados}"
 		when 'mergesort' then
-			puts "mergesort"
 			numOrdenados=mergesort(numeros)
-			puts numOrdenados
+			puts "Numeros ordenados con #{metodo}\n#{numOrdenados}"
 		else puts 'error en ingreso de metodo'
 	end 
 
 ####
 
-response = RestClient.post 'http://localhost:8081/send', {"numeros" => numOrdenados}.to_json, {:content_type => :json, :accept => :json}
-
+response = RestClient.post 'http://10.42.0.100:8081/send', {"numeros" => numOrdenados}.to_json, {:content_type => :json, :accept => :json}
+puts "Se enviaron numeros ordenados"
+puts ""
 ####
 
-  "Hola desde Ruby/Sinatra"
+  "Hola desde Ruby"
 end
 
 #quicksort

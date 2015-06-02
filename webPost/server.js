@@ -101,13 +101,13 @@ if(options['metodo']!="bubblesort"){
 	if(options['metodo']!="quicksort"){
 		if(options['metodo']!="mergesort"){
 			console.log("metodo no valido\n")
-			return 0
+			process.exit(1);
 		} 
 	} 
 } 
-console.log(options['archivo'])
-console.log(options['servidores'])
-console.log(options['metodo'])
+//console.log(options['archivo'])
+//console.log(options['servidores'])
+//onsole.log(options['metodo'])
 //Inicio post
 var request = require('request');
 var data;
@@ -140,10 +140,10 @@ s = fs.createReadStream(options['archivo'])
         console.log('Error while reading file.');
     })
     .on('end', function(){
-        console.log('Read entirefile.')
+        console.log('Archivo leido completamente')
         var array=split_n(arrayaux,options['servidores']);
         //go, ruby, python, php
-		servs = ["http://10.42.0.100:8088/datos", "http://10.42.0.100:4567/datos", "http://10.42.0.18:8082/datos","http://10.42.0.1:8080/server.php/datos"];
+		servs = ["http://10.42.0.1:8088/datos", "http://10.42.0.18:4567/datos", "http://10.42.0.18:8082/datos","http://10.42.0.1:8080/server.php/datos"];
 		//Inicio for
 		for (var i=0; i<options['servidores']; i++){
 			var datos = {
@@ -160,6 +160,7 @@ s = fs.createReadStream(options['archivo'])
 			 	//console.log(body);
 			 });
 		}
+        console.log("Datos enviados")
     })
 );
 
@@ -167,21 +168,17 @@ arraytodos=[]
 
 app.post('/send', function(req, res){
 	arraytodos=arraytodos.concat(req.body.numeros)
-	res.send("holo")
+    res.send("hola")
 	if (arraytodos.length==lineNr){
-		merger(arraytodos,0,lineNr);
-		console.log(arraytodos);
-		fs.writeFile('./out.txt',"",function(err){});
-		for (var j=0; j<lineNr;j++){
-			fs.appendFile('./out.txt', arraytodos[j]+"\n", function(err) {
-			    if( err ){
-			        console.log( err );
-			    }
-			    else{
-			        console.log('Se ha escrito correctamente');
-			    }
-			});
-		}
+    console.log("Se recibieron todas las partes ordenadas")
+        arraytodosordenado=merger(arraytodos,0,lineNr);
+        //console.log(arraytodos);
+        //for(var i=0; i<lineNr; i++) console.log(arraytodos[i])
+        fs.writeFile('./resultado.part',"",function(err){});
+        for (var j=0; j<lineNr;j++){
+             if (arraytodosordenado[j]!=null) fs.appendFile('./resultado.part', arraytodosordenado[j]+"\n", function(err) {});
+        } console.log("Archivo generado con todos los numeros ordenados")
+	process.exit(0);
 	}
 
 })
