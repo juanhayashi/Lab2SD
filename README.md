@@ -1,5 +1,15 @@
 # Lab2SD
 Servidores para la entrega 2 de Laboratorio de SD
+Integrantes:
+
+Verónica Domínguez Vera
+
+Claudia Guzmán Silva
+
+Juan Hayashi Cavieres
+
+
+
 
 REFERENCIAS:
 
