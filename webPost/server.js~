@@ -143,7 +143,7 @@ s = fs.createReadStream(options['archivo'])
         console.log('Archivo leido completamente')
         var array=split_n(arrayaux,options['servidores']);
         //go, ruby, python, php
-		servs = ["http://192.168.50.11:8088/datos", "http://192.168.50.11:4567/datos", "http://192.168.50.11:8082/datos","http://10.42.0.1:8080/server.php/datos"];
+		servs = ["http://10.42.0.1:8088/datos", "http://10.42.0.18:4567/datos", "http://10.42.0.18:8082/datos","http://10.42.0.1:8080/server.php/datos"];
 		//Inicio for
 		for (var i=0; i<options['servidores']; i++){
 			var datos = {

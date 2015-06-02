@@ -69,6 +69,8 @@ var databaseUrl = "TSD"; //Name db MongoDB
 
 //Usado para Routing
 app.use("/function", express.static(__dirname + '/function'));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb'}));
 app.use("/js", express.static(__dirname + '/js'));
 app.use("/css/", express.static(__dirname + '/css/'));
 app.use("/fonts/", express.static(__dirname + '/fonts/'));
@@ -111,7 +113,7 @@ if(options['metodo']!="bubblesort"){
 //Inicio post
 var request = require('request');
 var data;
-var arrayaux=[];
+var  arrayaux=[];
 var fs = require('fs')
     , util = require('util')
     , stream = require('stream')
@@ -143,7 +145,7 @@ s = fs.createReadStream(options['archivo'])
         console.log('Archivo leido completamente')
         var array=split_n(arrayaux,options['servidores']);
         //go, ruby, python, php
-		servs = ["http://10.42.0.1:8088/datos", "http://10.42.0.18:4567/datos", "http://10.42.0.18:8082/datos","http://10.42.0.1:8080/server.php/datos"];
+		servs = ["http://10.42.0.1:8088/datos", "http://10.42.0.100:4567/datos", "http://10.42.0.100:8082/datos","http://10.42.0.1:8080/server.php/datos"];
 		//Inicio for
 		for (var i=0; i<options['servidores']; i++){
 			var datos = {
@@ -165,20 +167,17 @@ s = fs.createReadStream(options['archivo'])
 );
 
 arraytodos=[]
-
 app.post('/send', function(req, res){
 	arraytodos=arraytodos.concat(req.body.numeros)
     res.send("hola")
 	if (arraytodos.length==lineNr){
     console.log("Se recibieron todas las partes ordenadas")
         arraytodosordenado=merger(arraytodos,0,lineNr);
-        //console.log(arraytodos);
-        //for(var i=0; i<lineNr; i++) console.log(arraytodos[i])
-        fs.writeFile('./resultado.part',"",function(err){});
-        for (var j=0; j<lineNr;j++){
-             if (arraytodosordenado[j]!=null) fs.appendFile('./resultado.part', arraytodosordenado[j]+"\n", function(err) {});
-        } console.log("Archivo generado con todos los numeros ordenados")
-	process.exit(0);
+        var file=fs.createWriteStream('resultado.part');
+        file.on('error', function(err){});
+        arraytodosordenado.shift();
+        arraytodosordenado.forEach(function(v){file.write(v+"\n");});
+        file.end();
+        console.log("Archivo generado con todos los numeros ordenados")
 	}
-
 })
